@@ -1,0 +1,5 @@
+transformers==4.21.1
+wandb==0.13.3
+datasets
+sklearn
+streamlit==1.2.0
