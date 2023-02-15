@@ -109,7 +109,7 @@ class SquadV2(datasets.GeneratorBasedBuilder):
                     context = paragraph["context"]  # do not strip leading blank spaces GH-2585
                     for qa in paragraph["qas"]:
                         question = qa["question"]
-                        # id_ = qa["id"]
+                        id_ = qa["id"]
 
                         answer_starts = [answer["answer_start"] for answer in qa["answers"]]
                         answers = [answer["text"] for answer in qa["answers"]]
@@ -120,7 +120,7 @@ class SquadV2(datasets.GeneratorBasedBuilder):
                             "title": title,
                             "context": context,
                             "question": question,
-                            "id": key,
+                            "id": id_,
                             "answers": {
                                 "answer_start": answer_starts,
                                 "text": answers,
