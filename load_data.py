@@ -93,8 +93,8 @@ class SquadV2(datasets.GeneratorBasedBuilder):
         #downloaded_files = dl_manager.download_and_extract(urls_to_download)
 
         return [
-            datasets.SplitGenerator(name=datasets.Split.TRAIN, gen_kwargs={"filepath": '/home/annt/kbqa/mrc/training/train_q_571_v2_01_add_squad_v20_mailong.json'}),
-            datasets.SplitGenerator(name=datasets.Split.VALIDATION, gen_kwargs={"filepath": '/home/annt/kbqa/mrc/training/test_v202_q142.json'}),
+            # datasets.SplitGenerator(name=datasets.Split.TRAIN, gen_kwargs={"filepath": '/home/annt/kbqa/mrc/training/train_q_571_v2_01_add_squad_v20_mailong.json'}),
+            datasets.SplitGenerator(name=datasets.Split.VALIDATION, gen_kwargs={"filepath": '/Users/tan/Desktop/annt/annt_step3_history_6.json'}),
         ]
 
     def _generate_examples(self, filepath):

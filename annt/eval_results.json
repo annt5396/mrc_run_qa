@@ -1,0 +1,13 @@
+{
+    "eval_NoAns_exact": 35.09933774834437,
+    "eval_NoAns_f1": 35.09933774834437,
+    "eval_NoAns_total": 151,
+    "eval_best_exact": 100.0,
+    "eval_best_exact_thresh": 0.0,
+    "eval_best_f1": 100.0,
+    "eval_best_f1_thresh": 0.0,
+    "eval_exact": 35.09933774834437,
+    "eval_f1": 35.09933774834437,
+    "eval_samples": 151,
+    "eval_total": 151
+}

@@ -86,6 +86,10 @@ def postprocess_qa_predictions(
 
     # The dictionaries we have to fill.
     all_predictions = collections.OrderedDict()
+
+    all_predictions_start = collections.OrderedDict()
+    all_predictions_context = collections.OrderedDict()
+
     all_nbest_json = collections.OrderedDict()
     if version_2_with_negative:
         scores_diff_json = collections.OrderedDict()
@@ -177,6 +181,7 @@ def postprocess_qa_predictions(
         for pred in predictions:
             offsets = pred.pop("offsets")
             pred["text"] = context[offsets[0] : offsets[1]]
+            pred['st'] = offsets[0]
 
         # In the very rare edge case we have not a single non-null prediction, we create a fake prediction to avoid
         # failure.
@@ -208,8 +213,12 @@ def postprocess_qa_predictions(
             scores_diff_json[example["id"]] = float(score_diff)  # To be JSON-serializable.
             if score_diff > null_score_diff_threshold:
                 all_predictions[example["id"]] = ""
+                all_predictions_start[example["id"]] = ''
+                all_predictions_context[example["id"]] = context
             else:
                 all_predictions[example["id"]] = best_non_null_pred["text"]
+                all_predictions_start[example["id"]] = best_non_null_pred["st"]
+                all_predictions_context[example["id"]] = context
 
         # Make `predictions` JSON-serializable by casting np.float back to float.
         all_nbest_json[example["id"]] = [
@@ -233,12 +242,28 @@ def postprocess_qa_predictions(
                 output_dir, "null_odds.json" if prefix is None else f"{prefix}_null_odds.json"
             )
 
+        st_file = os.path.join(
+            output_dir, "st.json" if prefix is None else f"{prefix}_st.json"
+        )
+
+        ct_file = os.path.join(
+            output_dir, "ct.json" if prefix is None else f"{prefix}_ct.json"
+        )
+
         logger.info(f"Saving predictions to {prediction_file}.")
-        with open(prediction_file, "w") as writer:
-            writer.write(json.dumps(all_predictions, indent=4) + "\n")
+        with open(prediction_file, "w", encoding='utf-8') as writer:
+            writer.write(json.dumps(all_predictions, indent=4, ensure_ascii=False) + "\n")
         logger.info(f"Saving nbest_preds to {nbest_file}.")
         with open(nbest_file, "w") as writer:
             writer.write(json.dumps(all_nbest_json, indent=4) + "\n")
+
+        logger.info(f"Saving st to {st_file}.")
+        with open(st_file, "w", encoding='utf-8') as writer:
+            writer.write(json.dumps(all_predictions_start, indent=4, ensure_ascii=False) + "\n")
+        logger.info(f"Saving nbest_preds to {ct_file}.")
+        with open(ct_file, "w", encoding='utf-8') as writer:
+            writer.write(json.dumps(all_predictions_context, indent=4, ensure_ascii=False) + "\n")
+
         if version_2_with_negative:
             logger.info(f"Saving null_odds to {null_odds_file}.")
             with open(null_odds_file, "w") as writer:
